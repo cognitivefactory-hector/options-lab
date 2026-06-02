@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Data cache (fetched market data)
+data/cache/
+
+# Django
+db.sqlite3
+/staticfiles/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
