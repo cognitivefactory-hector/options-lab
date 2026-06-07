@@ -1,0 +1,19 @@
+[project]
+name = "options-lab"
+version = "0.0.0"
+description = "An equities-and-options strategy studio — payoff, Greeks, IV surface, and an honest walk-forward + Monte-Carlo backtest."
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, isort, bugbear, pyupgrade, comprehensions.
+select = ["E", "F", "I", "B", "UP", "C4"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py", "*_test.py"]
+testpaths = ["tests"]
