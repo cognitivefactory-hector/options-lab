@@ -17,9 +17,23 @@ The killer is **fooling myself**: an overfit backtest, ignored transaction costs
 Positions are sized to risk, not conviction; I can point to the **trades I didn't take** because the regime was wrong; the backtest is honest about what it proves. The prevented loss: the blow-up that didn't happen because I sat out or sized down.
 
 ## Whiteboard session
-- Recording: _TBD_
-- The declined trade (regime said sit out): _…_
-- What I revised under push-back / held the line on: _…_
+- Recording: _TBD_ (5–8 min; script + concrete numbers in [`WHITEBOARD-DRILL.md`](./WHITEBOARD-DRILL.md)).
+- **The declined trade (regime said sit out):** on the Builder, the *Volatility spike* scenario drives the regime read to **realized vol ≈ 0.98, vol percentile 0.98, term ratio 1.60** → verdict **SIT OUT**. Same underlier in its live state reads **NEUTRAL** (rv 0.09, pct 0.04, term 0.76). The valuable output is the trade I *don't* put on when vol is spiking/backwardated — exactly where short premium gets run over.
+- **Costs visibly matter:** the demo's short-ATM-straddle walk-forward (23 trades) ends lower **with** costs than **without**, always — the invariant is enforced by a test, not hoped for. The drag is modest here (one straddle on quiet simulated data) and compounds with turnover and size.
+- **The honest result I'm proud of:** that same short-straddle backtest is a **loser** on the sample (**CAGR ≈ −7%, negative Sharpe**). I'm showing it anyway — a strategy with no edge in this regime, made worse by costs, that the filter would have me sit out. *That* is the point: not a green curve, but the judgment to recognize no-edge and the sizing to survive being wrong.
+- What I revised under push-back / held the line on: _record on camera; fold survivors here._
+
+## Measured results (from the shipped sample — reproducible, simulated data)
+| Run (short ATM straddle, 23 trades) | Without costs | With costs |
+|---|---|---|
+| SPY · CAGR | −7.1% | −7.2% |
+| SPY · Sharpe | −1.41 | −1.44 |
+| SPY · final equity (from $100k) | $86,919 | $86,639 |
+| AAPL · CAGR | +0.3% | +0.1% |
+
+- **Sit-out:** SPY + illustrative vol spike → **SIT OUT** (rv 0.98 / pct 0.98 / term 1.60); live SPY → NEUTRAL.
+- **Sizing:** $100k account, 2% risk, $500/contract worst case → **4 contracts, $2,000 at risk** (capped; Kelly never full).
+- These are from seeded **simulated** bars so the demo is reproducible offline; they prove *method*, not a live edge (see data-honesty note below).
 
 ---
 
