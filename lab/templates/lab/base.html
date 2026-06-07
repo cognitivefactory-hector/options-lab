@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Options Lab{% endblock %}</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0; font: 16px/1.6 system-ui, sans-serif;
+      background: #0d1117; color: #e6edf3;
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+    main { flex: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+    .tag { color: #7d8590; }
+    footer {
+      border-top: 1px solid #21262d; padding: 1rem 1.5rem;
+      font-size: 0.85rem; color: #7d8590; text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>
+    <strong>Not financial advice.</strong> Analytics / education tool on public
+    and simulated data. No live trading, no brokerage, no real money.
+  </footer>
+</body>
+</html>

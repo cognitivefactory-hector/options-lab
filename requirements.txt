@@ -1,0 +1,6 @@
+# Runtime dependencies.
+# Quant libs (numpy/scipy/pandas/yfinance/plotly) are added in M1+ as the
+# pure modules that need them land — kept out of M0 to keep the image lean.
+Django==5.1.4
+gunicorn==23.0.0
+whitenoise==6.8.2
