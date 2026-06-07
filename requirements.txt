@@ -1,6 +1,10 @@
 # Runtime dependencies.
-# Quant libs (numpy/scipy/pandas/yfinance/plotly) are added in M1+ as the
-# pure modules that need them land — kept out of M0 to keep the image lean.
+# Web layer.
 Django==5.1.4
 gunicorn==23.0.0
 whitenoise==6.8.2
+
+# Quant core (added per milestone as the modules that need them land).
+# M1 — pricing + Greeks: numpy for math, scipy for the normal distribution.
+numpy==2.2.1
+scipy==1.15.0
