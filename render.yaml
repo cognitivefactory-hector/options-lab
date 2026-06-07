@@ -1,0 +1,19 @@
+# Render blueprint — Dockerized Django web service.
+# Create the service from this file in the Render dashboard (New > Blueprint),
+# point it at this repo, and deploy. Render builds the Dockerfile and sets $PORT
+# (the container's CMD binds to it). No API keys: yfinance is keyless, and the
+# offline sample backs the demo if a live fetch is unavailable.
+services:
+  - type: web
+    name: options-lab
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "*"
