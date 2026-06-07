@@ -4,27 +4,110 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Options Lab{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
   <style>
-    :root { color-scheme: dark; }
-    body {
-      margin: 0; font: 16px/1.6 system-ui, sans-serif;
-      background: #0d1117; color: #e6edf3;
-      display: flex; flex-direction: column; min-height: 100vh;
+    :root{
+      --ink:#0a0e14; --panel:#11161f; --panel-2:#0d121a; --border:#1b2331;
+      --text:#c9d3e0; --muted:#6b7888; --amber:#f0b429; --cyan:#39c5cf;
+      --green:#3fb950; --neutral:#d29922; --red:#f85149;
+      --mono:"JetBrains Mono",ui-monospace,monospace;
+      --sans:"IBM Plex Sans",system-ui,sans-serif;
+      --serif:"Fraunces",Georgia,serif;
     }
-    main { flex: 1; max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem; }
-    h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
-    .tag { color: #7d8590; }
-    footer {
-      border-top: 1px solid #21262d; padding: 1rem 1.5rem;
-      font-size: 0.85rem; color: #7d8590; text-align: center;
+    *{box-sizing:border-box}
+    html{color-scheme:dark}
+    body{
+      margin:0; background:var(--ink); color:var(--text);
+      font-family:var(--sans); font-size:15px; line-height:1.6;
+      min-height:100vh; display:flex; flex-direction:column;
+      background-image:
+        linear-gradient(rgba(27,35,49,.35) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(27,35,49,.35) 1px,transparent 1px);
+      background-size:44px 44px;
     }
+    a{color:inherit;text-decoration:none}
+    header.top{
+      display:flex; align-items:center; gap:2rem; padding:.9rem 1.5rem;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg,rgba(17,22,31,.9),rgba(10,14,20,.6));
+      backdrop-filter:blur(6px); position:sticky; top:0; z-index:10;
+    }
+    .brand{font-family:var(--mono); font-weight:700; letter-spacing:.04em; font-size:1.05rem}
+    .brand .dot{color:var(--amber)}
+    nav.tabs{display:flex; gap:.25rem; margin-left:auto}
+    nav.tabs a{
+      font-family:var(--mono); font-size:.82rem; text-transform:uppercase;
+      letter-spacing:.08em; color:var(--muted); padding:.4rem .8rem;
+      border:1px solid transparent; border-radius:5px;
+    }
+    nav.tabs a:hover{color:var(--text); border-color:var(--border)}
+    nav.tabs a.active{color:var(--ink); background:var(--amber); font-weight:700}
+    main{flex:1; width:100%; max-width:1240px; margin:0 auto; padding:1.8rem 1.5rem}
+    h1{font-family:var(--mono); font-weight:700; font-size:1.5rem; letter-spacing:.02em; margin:.2rem 0}
+    .lede{font-family:var(--serif); font-style:italic; color:var(--muted); font-size:1.05rem; max-width:62ch}
+    .grid{display:grid; gap:1.1rem}
+    .panel{
+      background:linear-gradient(180deg,var(--panel),var(--panel-2));
+      border:1px solid var(--border); border-radius:10px; padding:1.1rem 1.2rem;
+    }
+    .panel h2{
+      font-family:var(--mono); font-size:.74rem; text-transform:uppercase;
+      letter-spacing:.14em; color:var(--muted); margin:0 0 .8rem;
+    }
+    label{display:block; font-family:var(--mono); font-size:.72rem; text-transform:uppercase;
+      letter-spacing:.1em; color:var(--muted); margin:.7rem 0 .25rem}
+    select,input{
+      width:100%; background:var(--panel-2); color:var(--text);
+      border:1px solid var(--border); border-radius:6px; padding:.5rem .6rem;
+      font-family:var(--mono); font-size:.9rem;
+    }
+    select:focus,input:focus{outline:none; border-color:var(--amber)}
+    .stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:.7rem}
+    .stat{background:var(--panel-2); border:1px solid var(--border); border-radius:8px; padding:.7rem .8rem}
+    .stat .k{font-family:var(--mono); font-size:.66rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+    .stat .v{font-family:var(--mono); font-size:1.15rem; font-weight:700; margin-top:.2rem}
+    .v.pos{color:var(--green)} .v.neg{color:var(--red)} .v.amber{color:var(--amber)}
+    table.data{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:.85rem}
+    table.data th,table.data td{text-align:right; padding:.4rem .5rem; border-bottom:1px solid var(--border)}
+    table.data th:first-child,table.data td:first-child{text-align:left; color:var(--muted)}
+    table.data th{color:var(--muted); font-weight:500; text-transform:uppercase; font-size:.68rem; letter-spacing:.08em}
+    .verdict{border-radius:10px; padding:1.1rem 1.2rem; border:1px solid; position:relative; overflow:hidden}
+    .verdict .stamp{font-family:var(--mono); font-weight:700; font-size:1.8rem; letter-spacing:.04em}
+    .verdict .note{font-family:var(--serif); font-style:italic; margin-top:.3rem; font-size:.98rem}
+    .verdict.favorable{border-color:rgba(63,185,80,.5); background:rgba(63,185,80,.08); color:var(--green)}
+    .verdict.neutral{border-color:rgba(210,153,34,.5); background:rgba(210,153,34,.08); color:var(--neutral)}
+    .verdict.sit_out{border-color:rgba(248,81,73,.6); background:rgba(248,81,73,.10); color:var(--red)}
+    .verdict .note,.verdict .meta{color:var(--text)}
+    .verdict .meta{font-family:var(--mono); font-size:.74rem; color:var(--muted); margin-top:.6rem}
+    .chart{width:100%; height:380px}
+    .tag{display:inline-block; font-family:var(--mono); font-size:.66rem; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--amber); border:1px solid rgba(240,180,41,.4);
+      border-radius:4px; padding:.12rem .5rem}
+    footer{border-top:1px solid var(--border); padding:1rem 1.5rem; text-align:center;
+      color:var(--muted); font-size:.82rem}
+    footer strong{color:var(--text)}
+    .cols{display:grid; grid-template-columns:320px 1fr; gap:1.1rem; align-items:start}
+    @media(max-width:840px){.cols{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
+  <header class="top">
+    <span class="brand">OPTIONS<span class="dot">·</span>LAB</span>
+    <nav class="tabs">
+      <a href="{% url 'builder' %}" class="{% block nav_builder %}{% endblock %}">Builder</a>
+      <a href="{% url 'vol' %}" class="{% block nav_vol %}{% endblock %}">Vol</a>
+      <a href="{% url 'backtest' %}" class="{% block nav_backtest %}{% endblock %}">Backtest</a>
+    </nav>
+  </header>
   <main>{% block content %}{% endblock %}</main>
   <footer>
-    <strong>Not financial advice.</strong> Analytics / education tool on public
-    and simulated data. No live trading, no brokerage, no real money.
+    <strong>Not financial advice.</strong> Analytics / education on public and
+    simulated data. No live trading, no brokerage, no real money.
   </footer>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

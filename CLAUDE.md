@@ -15,9 +15,15 @@ Treat `DECISIONS.md` as a first-class artifact, not an afterthought. When you ma
 
 ## Current state
 
-M0 done. The Django scaffold serves a landing page (with the disclaimer) locally and via Docker/gunicorn; pytest + ruff + GitHub Actions CI are wired up. The quant core (`pricing/`, `vol/`, `strategy/`, `backtest/`, `regime/`, `sizing/`, `data/`) does not exist yet — M1 (pricing + Greeks, test-first) is next.
+M0–M7 done. The full quant core exists and is tested: `pricing/` (Black-Scholes + Greeks), `vol/` (IV solver + surface), `strategy/` (multi-leg payoff/breakevens/Greeks + presets), `backtest/` (metrics, costs, Monte Carlo, reconstruction engine, walk-forward), `regime/` (a-priori vol verdict incl. "sit out"), `data/` (yfinance + cache + offline sample). The web layer is live: Builder / Vol / Backtest pages (Django views → `lab/studio.py` orchestration → `lab/charts.py` Plotly figures → templates with HTMX + CDN plotly.js). **M8 (polish, README, deploy) and M9 (decision record + whiteboard) remain.**
+
+Each milestone was shipped as its own PR off `main`. **Watch the merge target** — merge milestone PRs into `main`, not into another feature branch (this bit M2 twice early on).
 
 `PLAN.md` is the authoritative build sequence (M0 → M9): scaffold → pricing/Greeks → IV solver/surface → strategy builder → **backtest+costs+Monte-Carlo (the trust core)** → regime+sizing → data layer → UI → deploy → decision record/whiteboard. Read it before starting any milestone.
+
+## Web layer (M7)
+
+Views are thin: `lab/views.py` parses request params, calls `lab/studio.py` (framework-free orchestration that ties the quant modules together — premiums derived from BS so payoff/Greeks/P(profit) stay consistent), builds figures via `lab/charts.py` (Plotly, server-side, returned as JSON), and renders templates under `lab/templates/lab/`. Charts are rendered client-side by embedding `fig.to_json()` in a `<script type="application/json">` and calling `Plotly.newPlot` (plotly.js + htmx from CDN). No `{% static %}` is used (CSS is inlined in `base.html`), so tests don't need `collectstatic`. The regime "spike" scenario (`studio.stress_closes`) exists so the demo can surface a SIT_OUT verdict.
 
 ## Architecture (intended)
 

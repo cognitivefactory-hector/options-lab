@@ -1,0 +1,39 @@
+{% extends "lab/base.html" %}
+{% block title %}Builder · Options Lab{% endblock %}
+{% block nav_builder %}active{% endblock %}
+
+{% block content %}
+  <h1>Strategy Builder</h1>
+  <p class="lede">The valuable output isn't the green curve — it's knowing when there's no edge,
+    and sizing so one tail event doesn't end you.</p>
+
+  <div class="cols" style="margin-top:1.2rem">
+    <form class="panel" hx-get="{% url 'builder' %}" hx-target="#results"
+          hx-swap="innerHTML" hx-trigger="change, submit" onsubmit="return false">
+      <h2>Position</h2>
+      <label for="preset">Structure</label>
+      <select name="preset" id="preset">
+        {% for key, name in presets.items %}
+          <option value="{{ key }}" {% if key == preset %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+      <label for="ticker">Underlier</label>
+      <select name="ticker" id="ticker">
+        {% for t in tickers %}<option value="{{ t }}" {% if t == ticker %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+      <label for="sigma">Volatility (σ)</label>
+      <input type="number" step="0.01" min="0.01" max="3" name="sigma" id="sigma" value="{{ sigma }}">
+      <label for="dte">Time to expiry (years)</label>
+      <input type="number" step="0.05" min="0.02" max="3" name="dte" id="dte" value="{{ dte }}">
+      <label for="r">Risk-free rate (r)</label>
+      <input type="number" step="0.005" min="0" max="0.2" name="r" id="r" value="{{ r }}">
+      <label for="scenario">Regime scenario</label>
+      <select name="scenario" id="scenario">
+        <option value="live" {% if scenario == 'live' %}selected{% endif %}>Current (sample)</option>
+        <option value="spike" {% if scenario == 'spike' %}selected{% endif %}>Volatility spike (illustrative)</option>
+      </select>
+    </form>
+
+    <div id="results">{% include "lab/_builder_results.html" %}</div>
+  </div>
+{% endblock %}
