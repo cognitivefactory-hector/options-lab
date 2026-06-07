@@ -12,8 +12,12 @@ extend-exclude = ["migrations"]
 [tool.ruff.lint]
 # pycodestyle, pyflakes, isort, bugbear, pyupgrade, comprehensions.
 select = ["E", "F", "I", "B", "UP", "C4"]
+# dict(...) is idiomatic in Plotly figure construction (lab/charts.py); keep it.
+ignore = ["C408"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
 python_files = ["test_*.py", "*_test.py"]
 testpaths = ["tests"]
+# WhiteNoise warns when staticfiles/ is absent (it isn't collected in tests); benign.
+filterwarnings = ["ignore:No directory at:UserWarning"]

@@ -1,0 +1,76 @@
+{% extends "lab/base.html" %}
+{% load lab_extras %}
+{% block title %}Backtest · Options Lab{% endblock %}
+{% block nav_backtest %}active{% endblock %}
+
+{% block content %}
+  <h1>Walk-Forward Backtest</h1>
+  <p class="lede">A strategy that only works frictionless isn't a strategy. Watch the costs eat in.</p>
+
+  <form method="get" class="panel" style="margin:1.1rem 0; display:flex; gap:1rem; align-items:end; max-width:520px"
+        onchange="this.submit()">
+    <div style="flex:1">
+      <label for="ticker">Underlier</label>
+      <select name="ticker" id="ticker">
+        {% for t in tickers %}<option value="{{ t }}" {% if t == ticker %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+    </div>
+    <span class="tag">Short ATM straddle · σ={{ sigma }} · {{ n_trades }} trades</span>
+  </form>
+
+  <div class="stat-row" style="margin-bottom:1.1rem">
+    <div class="stat"><div class="k">Cost drag (with vs without)</div>
+      <div class="v neg">−{{ cost_gap|money }}</div></div>
+    <div class="stat"><div class="k">CAGR (with costs)</div>
+      <div class="v {% if metrics_with.cagr >= 0 %}pos{% else %}neg{% endif %}">{{ metrics_with.cagr|pct }}</div></div>
+    <div class="stat"><div class="k">Max drawdown</div>
+      <div class="v neg">{{ metrics_with.max_drawdown|pct }}</div></div>
+    <div class="stat"><div class="k">Sharpe</div>
+      <div class="v amber">{{ metrics_with.sharpe|floatformat:2 }}</div></div>
+    <div class="stat"><div class="k">Win rate</div>
+      <div class="v">{{ metrics_with.win_rate|pct }}</div></div>
+  </div>
+
+  <div class="grid" style="gap:1.1rem">
+    <div class="panel">
+      <h2>Equity — with vs without costs</h2>
+      <div id="equity-chart" class="chart"></div>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr; gap:1.1rem">
+      <div class="panel">
+        <h2>Monte-Carlo fan (outcome distribution)</h2>
+        <div id="mc-chart" class="chart"></div>
+      </div>
+      <div class="panel">
+        <h2>Metrics — with vs without costs</h2>
+        <table class="data">
+          <thead><tr><th>metric</th><th>with</th><th>without</th></tr></thead>
+          <tbody>
+            <tr><td>CAGR</td><td>{{ metrics_with.cagr|pct }}</td><td>{{ metrics_without.cagr|pct }}</td></tr>
+            <tr><td>max drawdown</td><td>{{ metrics_with.max_drawdown|pct }}</td><td>{{ metrics_without.max_drawdown|pct }}</td></tr>
+            <tr><td>Sharpe</td><td>{{ metrics_with.sharpe|floatformat:2 }}</td><td>{{ metrics_without.sharpe|floatformat:2 }}</td></tr>
+            <tr><td>Sortino</td><td>{{ metrics_with.sortino|floatformat:2 }}</td><td>{{ metrics_without.sortino|floatformat:2 }}</td></tr>
+            <tr><td>win rate</td><td>{{ metrics_with.win_rate|pct }}</td><td>{{ metrics_without.win_rate|pct }}</td></tr>
+            <tr><td>profit factor</td><td>{{ metrics_with.profit_factor|floatformat:2 }}</td><td>{{ metrics_without.profit_factor|floatformat:2 }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="application/json" id="equity-data">{{ equity_json|safe }}</script>
+<script type="application/json" id="mc-data">{{ mc_json|safe }}</script>
+<script>
+  (function(){
+    function plot(divId, dataId){
+      var el = document.getElementById(dataId);
+      if (el && window.Plotly){ var f = JSON.parse(el.textContent);
+        Plotly.newPlot(divId, f.data, f.layout, {displayModeBar:false, responsive:true}); }
+    }
+    plot('equity-chart','equity-data');
+    plot('mc-chart','mc-data');
+  })();
+</script>
+{% endblock %}

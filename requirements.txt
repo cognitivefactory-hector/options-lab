@@ -11,3 +11,5 @@ scipy==1.15.0
 # M6 — data layer: pandas for bar series, yfinance for keyless historical bars.
 pandas==2.2.3
 yfinance==0.2.51
+# M7 — UI: plotly figures rendered client-side via the CDN plotly.js.
+plotly==5.24.1

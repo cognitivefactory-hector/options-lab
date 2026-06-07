@@ -1,0 +1,67 @@
+{% load lab_extras %}
+<div class="grid">
+  <div class="verdict {{ verdict }}">
+    <div class="stamp">{{ verdict_label }}</div>
+    <div class="note">{{ verdict_note }}</div>
+    <div class="meta">
+      realized vol {{ regime.realized_vol }} · vol percentile {{ regime.vol_percentile }} ·
+      term ratio {{ regime.term_ratio }}{% if scenario == 'spike' %} · illustrative stress{% endif %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Payoff at expiry — spot {{ spot }}</h2>
+    <div id="payoff-chart" class="chart"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="k">Entry cost</div>
+      <div class="v {% if summary.entry_cost > 0 %}neg{% else %}pos{% endif %}">
+        {{ summary.entry_cost }}</div></div>
+    <div class="stat"><div class="k">Max profit</div>
+      <div class="v pos">{% if summary.max_profit == None %}∞{% else %}{{ summary.max_profit }}{% endif %}</div></div>
+    <div class="stat"><div class="k">Max loss</div>
+      <div class="v neg">{% if summary.max_loss == None %}−∞{% else %}{{ summary.max_loss }}{% endif %}</div></div>
+    <div class="stat"><div class="k">P(profit)</div>
+      <div class="v amber">{{ summary.prob_profit|pct }}</div></div>
+    <div class="stat"><div class="k">Breakevens</div>
+      <div class="v">{{ summary.breakevens|join:" / " }}</div></div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:1fr 1fr; gap:1.1rem">
+    <div class="panel">
+      <h2>Net Greeks</h2>
+      <table class="data">
+        <tbody>
+          {% for name, val in summary.greeks.items %}
+          <tr><td>{{ name }}</td><td>{{ val }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h2>Legs</h2>
+      <table class="data">
+        <thead><tr><th>leg</th><th>qty</th><th>strike</th><th>premium</th></tr></thead>
+        <tbody>
+          {% for leg in summary.legs %}
+          <tr><td>{{ leg.kind }}</td><td>{{ leg.quantity }}</td>
+            <td>{% if leg.strike %}{{ leg.strike }}{% else %}—{% endif %}</td>
+            <td>{{ leg.premium }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="payoff-data">{{ payoff_json|safe }}</script>
+<script>
+(function(){
+  var el = document.getElementById('payoff-data');
+  if (el && window.Plotly) {
+    var f = JSON.parse(el.textContent);
+    Plotly.newPlot('payoff-chart', f.data, f.layout, {displayModeBar:false, responsive:true});
+  }
+})();
+</script>
