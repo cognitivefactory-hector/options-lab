@@ -12,3 +12,7 @@ data/cache
 .env
 .env.*
 *.md
+docs
+tests
+tools
+.playwright-mcp
