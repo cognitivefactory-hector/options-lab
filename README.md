@@ -2,6 +2,8 @@
 
 An equities-and-options strategy studio — payoff, Greeks, IV surface, and an honest walk-forward + Monte-Carlo backtest — built to show the trade you *decided not to put on*, not just a green equity curve.
 
+**▶ Live demo: [options-lab.onrender.com](https://options-lab.onrender.com)** &nbsp;·&nbsp; (free tier — first load after idle takes ~30–60s to wake)
+
 > **Not financial advice.** Analytics / education tool on public + simulated data. No live trading, no brokerage, no real money, no personal account data.
 
 Part of [hector-garza.com](https://hector-garza.com)'s portfolio. One of **three equal deliverables**: the app, a **Decision Record** ([`DECISIONS.md`](./DECISIONS.md)), and a recorded whiteboard session. A working demo no longer proves competence — the judgment behind it does. See [`SPEC.md`](./SPEC.md) §0.
@@ -85,11 +87,11 @@ Free retail options chains are thin and delayed. Where real historical chains ar
 
 ## Deployment
 
-Dockerized; deploys to **Render** via [`render.yaml`](./render.yaml) (health check at `/healthz`, `$PORT`-aware, no API keys), optionally behind Cloudflare at `options.hector-garza.com`.
+Live on **Render** at [options-lab.onrender.com](https://options-lab.onrender.com), deployed from [`render.yaml`](./render.yaml) (Docker, health check at `/healthz`, `$PORT`-aware, no API keys). Optionally fronted by Cloudflare at `options.hector-garza.com`.
 
 ## Links
 
-- 🔗 Live demo: _TBD_
+- 🔗 Live demo: <https://options-lab.onrender.com>
 - 🧠 Decision record: [`DECISIONS.md`](./DECISIONS.md)
 - 🎥 Whiteboard walkthrough: _TBD_
 

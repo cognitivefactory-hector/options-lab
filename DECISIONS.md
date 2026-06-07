@@ -40,7 +40,7 @@ Positions are sized to risk, not conviction; I can point to the **trades I didn'
 ## Engineering decisions (recorded as built)
 - **Backend:** Django (views over framework-free `pricing/`, `strategy/`, `backtest/` modules) — one stack across the portfolio. Front end: Django templates + HTMX + Plotly.
 - **Data:** `yfinance` historical bars + CSV fallback; option prices reconstructed from underlier + Black-Scholes vol where real chains aren't available — **labeled as a model approximation.**
-- **Host:** Render (Dockerized) behind Cloudflare. No API keys.
+- **Host:** Render (Dockerized) behind Cloudflare, live at <https://options-lab.onrender.com>. No API keys.
 - **Disclaimer:** analytics/education, not financial advice — in footer + README.
 - **Backtest reconstruction (M4):** every backtested option price flows through one function, `backtest.engine.reconstruct_option_price` (Black-Scholes on the underlier path + a vol assumption). This is the **disclosed model approximation** — it proves method, not a live edge. Keeping it in a single place makes the assumption auditable rather than scattered.
 - **Cost model (M4):** explicit commission / bid-ask spread / slippage / assignment with a **with-vs-without toggle** (`cost_model=None`). Costs are non-negative by construction (strictly positive when a position trades), so "with costs" can never beat "without costs" — enforced by a test, not just intended. Defaults are modest retail numbers (~$0.65/contract, 1c half-spread, ~2bps slippage); **REJECTED** frictionless backtesting, which is how retail results die live.
