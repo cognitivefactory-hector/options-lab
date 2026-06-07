@@ -2,7 +2,7 @@
 
 An equities-and-options strategy studio — payoff, Greeks, IV surface, and an honest walk-forward + Monte-Carlo backtest — built to show the trade you *decided not to put on*, not just a green equity curve.
 
-**▶ Live demo: [options-lab.onrender.com](https://options-lab.onrender.com)** &nbsp;·&nbsp; (free tier — first load after idle takes ~30–60s to wake)
+**▶ Live demo: [options.hector-garza.com](https://options.hector-garza.com)** &nbsp;·&nbsp; (free tier — first load after idle takes ~30–60s to wake)
 
 > **Not financial advice.** Analytics / education tool on public + simulated data. No live trading, no brokerage, no real money, no personal account data.
 
@@ -87,11 +87,11 @@ Free retail options chains are thin and delayed. Where real historical chains ar
 
 ## Deployment
 
-Live on **Render** at [options-lab.onrender.com](https://options-lab.onrender.com), deployed from [`render.yaml`](./render.yaml) (Docker, health check at `/healthz`, `$PORT`-aware, no API keys). Optionally fronted by Cloudflare at `options.hector-garza.com`.
+Live at [options.hector-garza.com](https://options.hector-garza.com) — a Dockerized Django app on **Render** (deployed from [`render.yaml`](./render.yaml); health check at `/healthz`, `$PORT`-aware, no API keys) fronted by **Cloudflare**. The Render origin (`options-lab.onrender.com`) also works directly.
 
 ## Links
 
-- 🔗 Live demo: <https://options-lab.onrender.com>
+- 🔗 Live demo: <https://options.hector-garza.com>
 - 🧠 Decision record: [`DECISIONS.md`](./DECISIONS.md)
 - 🎥 Whiteboard walkthrough: _TBD_
 
