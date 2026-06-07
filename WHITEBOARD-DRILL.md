@@ -36,3 +36,30 @@
 - **Holds:** robustness-over-return; the declined-trade thesis; growth-for-survivability trade.
 - **Sharpen:** label exactly what rests on the BS price reconstruction (Q2); prove the regime filter is a-priori (Q5); have the cost delta + the sit-out example ready (Q4, Q6).
 - **Land this line in the room:** *"The valuable output isn't the green curve — it's knowing when there's no edge, and sizing so one tail event doesn't end me."*
+
+---
+
+## Recording day — concrete numbers + a 6-minute script
+
+All figures below are from the shipped (seeded, **simulated**) sample, reproducible via the app or `pytest`. They prove method, not a live edge — say so on camera.
+
+**Numbers to have on screen:**
+- **Sit-out:** Builder → *Volatility spike* scenario → **SIT OUT** (realized vol 0.98, vol percentile 0.98, **term ratio 1.60**). Live SPY for contrast → **NEUTRAL** (rv 0.09, pct 0.04, term 0.76).
+- **Costs:** Backtest → short ATM straddle, 23 trades → ends lower **with** costs than without, every time (test-enforced).
+- **The honest loser:** that backtest is **CAGR ≈ −7%, Sharpe ≈ −1.4** on SPY — show it, don't hide it.
+- **Sizing:** $100k / 2% / $500 worst case → **4 contracts, $2k at risk**; Kelly capped, never full.
+
+**Script (≈6 min):**
+1. **(0:00) Thesis.** "Anyone can show a green curve. I'll show you the trade I *didn't* take." (SDRC Situation → Decision.)
+2. **(0:45) Builder.** Build the iron condor; point at payoff, net Greeks, breakevens, P(profit). Premiums are BS-derived so it's internally consistent.
+3. **(2:00) The sit-out.** Flip to the *vol spike* scenario → **SIT OUT**. Tie it to the a-priori rule (term ratio > 1.20). "A curve-fitter never adds an output that cuts trade count."
+4. **(3:15) Costs.** Backtest with vs without costs; name the drag; "a strategy that only works frictionless isn't a strategy."
+5. **(4:15) The honest loser + robustness.** "This short-straddle is a *loser* here — no edge in this regime. Walk-forward, not a single in-sample fit; Monte-Carlo the distribution, not one path."
+6. **(5:15) Risk.** Sizing to survive a tail (capped Kelly, never full); the growth-for-survivability trade I *accept*. Close on the line above.
+
+**Pre-record checklist:**
+- [ ] App running (live demo URL or `make run`); Builder/Vol/Backtest loaded in tabs.
+- [ ] Screen + mic test (Loom or OBS → MP4), 5–8 min.
+- [ ] Walk the **declined-trade** example explicitly (challenge #5/#6).
+- [ ] Concede at least one fair point under push-back (or give a crisp reason you hold).
+- [ ] After: fold surviving reasoning into `DECISIONS.md`; paste the recording link into `DECISIONS.md` + `README.md` + hector-garza.com.
