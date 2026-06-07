@@ -7,7 +7,7 @@ services:
   - type: web
     name: options-lab
     runtime: docker
-    plan: free
+    plan: starter        # always-on paid instance (no free-tier spin-down)
     healthCheckPath: /healthz
     autoDeploy: true
     envVars:
