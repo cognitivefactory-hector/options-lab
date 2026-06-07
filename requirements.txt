@@ -8,3 +8,6 @@ whitenoise==6.8.2
 # M1 — pricing + Greeks: numpy for math, scipy for the normal distribution.
 numpy==2.2.1
 scipy==1.15.0
+# M6 — data layer: pandas for bar series, yfinance for keyless historical bars.
+pandas==2.2.3
+yfinance==0.2.51
