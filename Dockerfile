@@ -17,4 +17,7 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Render/Cloudflare set $PORT; default to 8000 locally.
-CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
+# --preload imports the app (incl. plotly/pandas/scipy/yfinance) in the arbiter
+# before the worker accepts traffic, so /healthz answers instantly on the first
+# hit instead of paying the heavy-import cost during Render's health check.
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --preload --timeout 60"]
